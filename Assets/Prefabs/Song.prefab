@@ -215,8 +215,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: SongName
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ab3b01114073a904faf27b3763c8486e, type: 2}
-  m_sharedMaterial: {fileID: -8216486421942834289, guid: ab3b01114073a904faf27b3763c8486e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ccba5ba225ddbc347b6c97b1529d1a75, type: 2}
+  m_sharedMaterial: {fileID: -6858622859122442936, guid: ccba5ba225ddbc347b6c97b1529d1a75, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -240,11 +240,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 88
+  m_fontSize: 85.1
   m_fontSizeBase: 88
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 57.39
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 27
   m_fontSizeMax: 88
   m_fontStyle: 0
   m_HorizontalAlignment: 1

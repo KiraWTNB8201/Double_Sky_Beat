@@ -1056,7 +1056,7 @@ MonoBehaviour:
   comboText: {fileID: 612965875}
   scoreText: {fileID: 1652522392}
   finish: {fileID: 287617603}
-  hitSound: {fileID: 8300000, guid: 2daf3431bc4f9054b972d702636135c9, type: 3}
+  hitSound: {fileID: 8300000, guid: 6ca0e441997f7684abf7bc06e3b9c013, type: 3}
 --- !u!4 &607187921
 Transform:
   m_ObjectHideFlags: 0
