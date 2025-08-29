@@ -3,7 +3,20 @@ guid: aca4da0026cefa04a8b00d56ee5ffa29
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - noteSpeed_Slid: {instanceID: 0}
+  - noteSpeed_text: {instanceID: 0}
+  - BGBrightness_Slid: {instanceID: 0}
+  - BGBrightness_text: {instanceID: 0}
+  - BGMVolume_Slid: {instanceID: 0}
+  - BGMVolume_text: {instanceID: 0}
+  - SEVolume_Slid: {instanceID: 0}
+  - SEVolume_text: {instanceID: 0}
+  - songOffset_Slid: {instanceID: 0}
+  - songOffset_text: {instanceID: 0}
+  - noteOffset_Slid: {instanceID: 0}
+  - noteOffset_text: {instanceID: 0}
+  - bgm: {fileID: 8300000, guid: 82a8e38c4a58caf4a9c28f6569c0bdc8, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

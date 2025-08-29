@@ -5,6 +5,7 @@ using TMPro;
 using System.IO;
 
 using static Const;
+[RequireComponent(typeof(AudioSource))]
 
 public class Setting : MonoBehaviour {
     [SerializeField]Slider noteSpeed_Slid;
@@ -25,7 +26,15 @@ public class Setting : MonoBehaviour {
     public string filePath;
     SettingData save = new SettingData();
 
+    [SerializeField] AudioClip bgm;
+    AudioSource audioSource;
+
     void Start() {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = bgm;
+        audioSource.loop = true;
+        audioSource.Play();
+
         filePath = Application.persistentDataPath + "/" + "savedata.json";
         
         //セーブデータがなかったら新規作成
