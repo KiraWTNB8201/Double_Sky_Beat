@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour {
 
-    public BGMData BGMData;
+    [SerializeField]private BGMData BGMData;
+    [SerializeField]private SEData SEData;
 
     public static AudioManager instance = null;
 
-    AudioSource bgmSource = null;
-    AudioSource seSource = null;
+    private AudioSource bgmSource = null;
+    private AudioSource seSource = null;
 
     // Start is called before the first frame update
     void Awake(){
