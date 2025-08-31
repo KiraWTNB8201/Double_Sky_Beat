@@ -2,17 +2,60 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
-{
+
+public class AudioManager : MonoBehaviour {
+
+    public BGMData BGMData;
+
+    public static AudioManager instance = null;
+
+    AudioSource bgmSource = null;
+    AudioSource seSource = null;
+
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Awake(){
+        // シングルトン初期化
+        if (instance != null && instance != this) {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+
+        //AudioSourceをBGM用とSE用に二つ追加する
+        bgmSource = gameObject.AddComponent<AudioSource>();
+        bgmSource.loop = true;
+
+        seSource = gameObject.AddComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    /// <summary>
+    /// BGMを新しく再生する。
+    /// </summary>
+    /// <param name="bgmID"></param>
+    public void BGMPlay(int bgmID) {
+        bgmSource.clip = BGMData.bgm[bgmID];
+        bgmSource.Play();
+    }
+
+    /// <summary>
+    /// BGMを再生停止する。
+    /// </summary>
+    public void BGMStop() {
+        bgmSource.Stop();
+    }
+
+    /// <summary>
+    /// SEを新しく再生する。
+    /// </summary>
+    /// <param name="bgmID"></param>
+    public void SEPlay(int bgmID) {
+        seSource.PlayOneShot(BGMData.bgm[bgmID]);
+    }
+
+    /// <summary>
+    /// BGMを再生停止する。
+    /// </summary>
+    public void SEStop() {
+        seSource.Stop();
     }
 }
