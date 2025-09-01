@@ -18,6 +18,8 @@ public class Result : MonoBehaviour {
     [SerializeField] TextMeshProUGUI missText;
 
     private void OnEnable() {
+        AudioManager.instance.BGMPlay(2);
+
         SongName.text = MusicManager.instance.songName;
         scoreText.text = GameManager.instance.score.ToString();
         comboText.text = GameManager.instance.maxCombo.ToString();
@@ -30,6 +32,8 @@ public class Result : MonoBehaviour {
     }
 
     public void Retry() {
+        AudioManager.instance.BGMStop();
+
         GameManager.instance.perfect = 0;
         GameManager.instance.great = 0;
         GameManager.instance.bad = 0;
@@ -43,6 +47,8 @@ public class Result : MonoBehaviour {
     }
 
     public void Close() {
+        AudioManager.instance.BGMStop();
+
         GameManager.instance.perfect = 0;
         GameManager.instance.great = 0;
         GameManager.instance.bad = 0;

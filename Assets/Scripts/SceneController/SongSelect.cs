@@ -40,8 +40,6 @@ public class SongSelect : MonoBehaviour {
         Music = (AudioClip)Resources.Load("Musics/" + songName);
         audio.PlayOneShot(Music);
         songImage.sprite = dataBase.songData[select].songImage;
-        //SongUpdateALL();
-
     }
 
     // Update is called once per frame
@@ -54,44 +52,7 @@ public class SongSelect : MonoBehaviour {
             audio.PlayOneShot(Music);
             songImage.sprite = dataBase.songData[select].songImage;
         }
-
-        //if (Input.GetKeyDown(KeyCode.DownArrow))
-        //    if (select < dataBase.songData.Length) {
-        //        select++;
-        //        SongUpdateALL();
-        //    }
-        //if (Input.GetKeyDown(KeyCode.UpArrow))
-        //    if (select < dataBase.songData.Length) {
-        //        select--;
-        //        SongUpdateALL();
-        //    }
-        //if (Input.GetKeyDown(KeyCode.Space)) SongStart();
     }
-
-    private void LateUpdate() {
-        
-    }
-
-    private void SongUpdateALL() {
-        
-        //for (int i = 0; i < 5; i++) {
-        //    SongUpdate(i - 2);
-        //}
-    }
-
-    private void SongUpdate(int id) {
-        //try {
-        //    songNameText[id + 2].text = dataBase.songData[select + id].songName;
-        //    songLevelText[id + 2].text = "Lv." + dataBase.songData[select + id].songLevel;
-        //}
-        //catch {
-        //    songNameText[id + 2].text = "";
-        //    songLevelText[id + 2].text = "";
-        //}
-        if (id == 0) songImage.sprite = dataBase.songData[select + id].songImage;
-        GameManager.instance.songID = select;
-    }
-
     public void SongStart() {
         //ノーツ速度が不正値だったらデフォルト値に直す
         if(GameManager.instance.settingData.noteSpeed < 1 || GameManager.instance.settingData.noteSpeed > 99) {
@@ -102,6 +63,8 @@ public class SongSelect : MonoBehaviour {
     }
 
     public void GotoSetting() {
+        AudioManager.instance.SEPlay(0);
+
         SceneManager.LoadScene("Setting");
     }
 }

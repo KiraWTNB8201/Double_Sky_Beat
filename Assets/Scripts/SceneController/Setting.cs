@@ -26,14 +26,8 @@ public class Setting : MonoBehaviour {
     public string filePath;
     SettingData save = new SettingData();
 
-    [SerializeField] AudioClip bgm;
-    AudioSource audioSource;
-
     void Start() {
-        audioSource = GetComponent<AudioSource>();
-        audioSource.clip = bgm;
-        audioSource.loop = true;
-        audioSource.Play();
+        AudioManager.instance.BGMPlay(1);
 
         filePath = Application.persistentDataPath + "/" + "savedata.json";
         

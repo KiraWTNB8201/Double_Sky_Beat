@@ -5,20 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class Title : MonoBehaviour {
     [SerializeField] FadeManager fadeManager;
-    [SerializeField] AudioClip bgm;
-    AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start() {
-        audioSource = GetComponent<AudioSource>();
-        audioSource.clip = bgm;
-        audioSource.loop = true;
-        audioSource.Play();
+        AudioManager.instance.BGMPlay(0);
     }
 
     // Update is called once per frame
     void Update() {
         if (Input.anyKeyDown) {
+            AudioManager.instance.BGMStop();
+
+            AudioManager.instance.SEPlay(0);
+
             fadeManager.fadeOutStart(0, 0, 0, 0, "MusicSelect");
         }
     }
