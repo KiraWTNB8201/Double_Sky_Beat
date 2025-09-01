@@ -64,9 +64,9 @@ public class NotesManager : MonoBehaviour {
         GameManager.instance.maxScore = noteNum * 5;
 
         for (int i = 0; i < noteNum; i++) {
-            float distance = 60 / (inputJson.BPM * (float)inputJson.notes[i].LPB);                                                                                             //
-            float beatSec = distance * (float)inputJson.notes[i].LPB;                                                                                                          //¨ƒm[ƒc‚Ì—¬‚ê‚Ä‚­‚éŽžŠÔ‚ðÝ’è
-            float time = (beatSec * inputJson.notes[i].num / (float)inputJson.notes[i].LPB) + inputJson.offset * 0.01f + (GameManager.instance.settingData.noteOffset / 1000); //
+            float distance = 60 / (inputJson.BPM * (float)inputJson.notes[i].LPB);                                      //
+            float beatSec = distance * (float)inputJson.notes[i].LPB;                                                   //¨ƒm[ƒc‚Ì—¬‚ê‚Ä‚­‚éŽžŠÔ‚ðÝ’è
+            float time = (beatSec * inputJson.notes[i].num / (float)inputJson.notes[i].LPB) + inputJson.offset * 0.01f; //
             NotesTime.Add(time);                        //
             LaneNum.Add(inputJson.notes[i].block);      //¨ƒm[ƒc‚Ìî•ñ‚ðƒŠƒXƒg‚É“o˜^
             NoteType.Add(inputJson.notes[i].type);      //

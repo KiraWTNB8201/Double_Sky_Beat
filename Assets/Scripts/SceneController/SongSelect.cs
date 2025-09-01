@@ -54,8 +54,9 @@ public class SongSelect : MonoBehaviour {
         }
     }
     public void SongStart() {
+        AudioManager.instance.SEPlay(0);
         //ノーツ速度が不正値だったらデフォルト値に直す
-        if(GameManager.instance.settingData.noteSpeed < 1 || GameManager.instance.settingData.noteSpeed > 99) {
+        if (GameManager.instance.settingData.noteSpeed < 1 || GameManager.instance.settingData.noteSpeed > 99) {
             GameManager.instance.settingData.noteSpeed = _DEFAULT_NOTE_SPEED;
         }
             

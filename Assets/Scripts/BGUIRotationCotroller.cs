@@ -15,13 +15,12 @@ public class BGUIRotationCotroller : MonoBehaviour
         if (GameManager.instance.settingData.BackGroundBrightness == 0) {
             GameManager.instance.settingData.BackGroundBrightness = 100;
         }
-        float Bright = (float)(GameManager.instance.settingData.BackGroundBrightness) * 2.55f;
+        float Bright = (float)(GameManager.instance.settingData.BackGroundBrightness) / 255;
         jacket.color = new Color(Bright, Bright, Bright);
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update(){
         transform.rotation = rotationRoot.rotation;
     }
 }

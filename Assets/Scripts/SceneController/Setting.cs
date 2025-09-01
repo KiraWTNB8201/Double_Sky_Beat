@@ -5,7 +5,6 @@ using TMPro;
 using System.IO;
 
 using static Const;
-[RequireComponent(typeof(AudioSource))]
 
 public class Setting : MonoBehaviour {
     [SerializeField]Slider noteSpeed_Slid;

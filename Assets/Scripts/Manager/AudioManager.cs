@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 public class AudioManager : MonoBehaviour {
 
@@ -13,7 +10,6 @@ public class AudioManager : MonoBehaviour {
     private AudioSource bgmSource = null;
     private AudioSource seSource = null;
 
-    // Start is called before the first frame update
     void Awake(){
         // ƒVƒ“ƒOƒ‹ƒgƒ“‰Šú‰»
         if (instance != null && instance != this) {
@@ -27,6 +23,8 @@ public class AudioManager : MonoBehaviour {
         bgmSource.loop = true;
 
         seSource = gameObject.AddComponent<AudioSource>();
+
+        
     }
 
     /// <summary>

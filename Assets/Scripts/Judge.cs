@@ -8,6 +8,8 @@ public class Judge : MonoBehaviour {
     //変数
     [SerializeField] private GameObject[] MassageObj;   //プレイヤーに判定を伝えるオブジェクト
     [SerializeField] NotesManager notesManager;         //スクリプトを入れる
+    [SerializeField] GameObject[] EffectPrefabs;
+    [SerializeField] GameObject[] EffectPlayTransform;
 
     [SerializeField] TextMeshProUGUI comboText;
     [SerializeField] TextMeshProUGUI scoreText;
@@ -143,7 +145,8 @@ public class Judge : MonoBehaviour {
     /// </summary>
     /// <param name="judge"></param>
     void Judge_Message(int judge) {
-        Instantiate(MassageObj[judge],new Vector3(notesManager.LaneNum[0]-1.5f,0.76f,0.15f),Quaternion.identity);
+        Instantiate(MassageObj[judge],new Vector3(notesManager.LaneNum[0]-1.5f,0.77f,0.15f),Quaternion.identity);
+        Instantiate(EffectPrefabs[judge], EffectPlayTransform[notesManager.LaneNum[0]].transform.position,Quaternion.identity);
     }
 
     void ResultScene() {
