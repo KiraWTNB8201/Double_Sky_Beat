@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: SEData
   m_EditorClassIdentifier: 
   se:
-  - {fileID: 8300000, guid: 1bd33de3fd47db74497ab8d2491b788d, type: 3}
+  - {fileID: 8300000, guid: b050bef8a7c1fe1409c9badd1343f3c9, type: 3}
+  - {fileID: 8300000, guid: 2daf3431bc4f9054b972d702636135c9, type: 3}
