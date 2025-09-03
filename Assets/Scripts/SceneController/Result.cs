@@ -33,6 +33,7 @@ public class Result : MonoBehaviour {
 
     public void Retry() {
         AudioManager.instance.BGMStop();
+        AudioManager.instance.SEPlay(1);
 
         GameManager.instance.perfect = 0;
         GameManager.instance.great = 0;
@@ -48,6 +49,7 @@ public class Result : MonoBehaviour {
 
     public void Close() {
         AudioManager.instance.BGMStop();
+        AudioManager.instance.SEPlay(1);
 
         GameManager.instance.perfect = 0;
         GameManager.instance.great = 0;

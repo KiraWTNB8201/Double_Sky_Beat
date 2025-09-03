@@ -72,6 +72,9 @@ public class Setting : MonoBehaviour {
     /// İ’è‚ğ•Û‘¶‚µ‘I‹È‰æ–Ê‚É–ß‚é
     /// </summary>
     public void ExitSettings() {
+        AudioManager.instance.BGMStop();
+        AudioManager.instance.SEPlay(1);
+
         //İ’è‚ğ“K—p
         GameManager.instance.settingData.noteSpeed = setData.noteSpeed;
         GameManager.instance.settingData.BackGroundBrightness = setData.BackGroundBrightness;
