@@ -47,8 +47,8 @@ public class AudioManager : MonoBehaviour {
     /// SE‚ğV‚µ‚­Ä¶‚·‚éB
     /// </summary>
     /// <param name="bgmID"></param>
-    public void SEPlay(int bgmID) {
-        seSource.PlayOneShot(BGMData.bgm[bgmID]);
+    public void SEPlay(int seID) {
+        seSource.PlayOneShot(SEData.se[seID]);
     }
 
     /// <summary>

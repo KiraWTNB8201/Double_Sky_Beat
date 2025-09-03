@@ -8,6 +8,7 @@ public class SongSelectButtonResponce : MonoBehaviour {
 
     public void OnSelect() {
         GameManager.instance.songID = songID;
+        AudioManager.instance.SEPlay(1);
     }
 
 }
