@@ -26,6 +26,7 @@ public class Setting : MonoBehaviour {
     SettingData save = new SettingData();
 
     void Start() {
+        BackgroundVideoManager.Instance.PlayBackgroundVideo(2);
         AudioManager.instance.BGMPlay(1);
 
         filePath = Application.persistentDataPath + "/" + "savedata.json";

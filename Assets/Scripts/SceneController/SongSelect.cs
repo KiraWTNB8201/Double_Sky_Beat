@@ -25,6 +25,8 @@ public class SongSelect : MonoBehaviour {
     private const int _SONG_LEVEL_INDEX = 1;
 
     void Start() {
+        BackgroundVideoManager.Instance.PlayBackgroundVideo(1);
+
         songCount = dataBase.songData.Length;
         for (int songCurrent = 0; songCurrent < songCount; songCurrent++) {
             GameObject song = Instantiate(songDataObject,songDataObjectRoot.transform);
