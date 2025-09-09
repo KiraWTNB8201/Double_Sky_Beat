@@ -8,6 +8,8 @@ public class Title : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
+
+
         AudioManager.instance.BGMPlay(0);
         BackgroundVideoManager.Instance.PlayBackgroundVideo(0);
     }
