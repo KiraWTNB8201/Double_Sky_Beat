@@ -14,7 +14,12 @@ public class BackgroundVideoManager : MonoBehaviour {
     [Header("ポスター画像を表示する RawImage")]
     [SerializeField] private RawImage posterRawImage;
 
+    private Camera mainCamera; // キャッシュ用
+
     private void Awake() {
+        // シーンにある MainCamera タグ付きカメラを取得
+        mainCamera = Camera.main;
+
         if (Instance == null) {
             Instance = this;
             DontDestroyOnLoad(gameObject);
@@ -29,10 +34,22 @@ public class BackgroundVideoManager : MonoBehaviour {
         videoPlayer.prepareCompleted += OnVideoPrepared;
     }
 
+    private void Update() {
+        if (mainCamera == null) {
+            // 何らかの理由でカメラが失われたら再取得
+            mainCamera = Camera.main;
+
+            if (mainCamera != null)
+                Debug.Log("カメラを再取得しました");
+            videoPlayer.targetCamera = mainCamera;
+        }
+    }
+
     /// <summary>
     /// VideoData を受け取って動画を再生する
     /// </summary>
     public void PlayBackgroundVideo(int ID) {
+        Debug.Log("動画再生要求: " + data.name);
         if (data == null) {
             Debug.LogWarning("VideoData が指定されていません");
             return;
@@ -51,11 +68,13 @@ public class BackgroundVideoManager : MonoBehaviour {
     }
 
     private void OnVideoPrepared(VideoPlayer vp) {
+        Debug.Log("動画準備完了");
         // 準備が完了したらポスター画像を消して動画再生
         if (posterRawImage != null)
             posterRawImage.enabled = false;
 
         vp.Play();
+        Debug.Log("再生を開始しました。");
     }
 
     /// <summary>

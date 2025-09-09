@@ -1124,6 +1124,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 521398370289278577, guid: 73ebe5f857cc48e4ba05f008cc74eb21, type: 3}
+      propertyPath: m_Looping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 521398370289278577, guid: 73ebe5f857cc48e4ba05f008cc74eb21, type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521398370289278577, guid: 73ebe5f857cc48e4ba05f008cc74eb21, type: 3}
+      propertyPath: m_TargetCamera
+      value: 
+      objectReference: {fileID: 809835490}
+    - target: {fileID: 521398370289278577, guid: 73ebe5f857cc48e4ba05f008cc74eb21, type: 3}
+      propertyPath: m_WaitForFirstFrame
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4886365436674480394, guid: 73ebe5f857cc48e4ba05f008cc74eb21, type: 3}
       propertyPath: m_Name
       value: BGVideoManager

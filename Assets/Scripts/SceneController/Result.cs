@@ -1,5 +1,3 @@
- using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -17,7 +15,7 @@ public class Result : MonoBehaviour {
     [SerializeField] TextMeshProUGUI badText;
     [SerializeField] TextMeshProUGUI missText;
 
-    private void OnEnable() {
+    private void Start() {
         AudioManager.instance.BGMPlay(2);
 
         SongName.text = MusicManager.instance.songName;
