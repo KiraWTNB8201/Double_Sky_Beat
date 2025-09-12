@@ -1,60 +1,52 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
 public class Judge : MonoBehaviour {
-    [SerializeField] private GameObject[] MassageObj;
-    [SerializeField] private NotesManager notesManager;
-    [SerializeField] private GameObject[] EffectPrefabs;
-    [SerializeField] private GameObject[] EffectPlayTransform;
-    [SerializeField] private TextMeshProUGUI comboText;
-    [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private GameObject finish;
+    //変数
+    [SerializeField] private GameObject[] MassageObj;   //プレイヤーに判定を伝えるオブジェクト
+    [SerializeField] NotesManager notesManager;         //スクリプトを入れる
+    [SerializeField] GameObject[] EffectPrefabs;
+    [SerializeField] GameObject[] EffectPlayTransform;
 
-    [SerializeField] private AudioSource audioSource; // 曲のAudioSource
+    [SerializeField] TextMeshProUGUI comboText;
+    [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] GameObject finish;
+    new AudioSource audio;
+    [SerializeField] AudioClip hitSound;
+    bool finishFlag;
 
-    private AudioSource seSource;
-    [SerializeField] private AudioClip hitSound;
-
-    private bool finishFlag = false;
-    private float endTime = 0;
+    float endTime = 0;
 
     void Start() {
-        seSource = GetComponent<AudioSource>();
-        if (notesManager.NotesTime.Count > 0)
-            endTime = notesManager.NotesTime[notesManager.NotesTime.Count - 1];
+        audio = GetComponent<AudioSource>();
+        endTime = notesManager.NotesTime[notesManager.NotesTime.Count - 1];
+        finishFlag = false;
     }
 
     void Update() {
-        float musicTime = audioSource.time; // 曲の再生時間を基準にする
-
         if (GameManager.instance.start && !finishFlag) {
-            // タッチ／マウス
-            if (Input.touchCount > 0) {
-                foreach (var touch in Input.touches) {
-                    if (touch.phase == TouchPhase.Began) {
-                        int lane = GetTouchedLane(touch.position);
-                        if (lane >= 0)
-                            TryJudgeLane(lane, musicTime);
-                    }
-                }
-            } else if (Input.GetMouseButtonDown(0)) {
-                int lane = GetTouchedLane(Input.mousePosition);
-                if (lane >= 0)
-                    TryJudgeLane(lane, musicTime);
-            }
+            //指定キーが押されたときキーとレーンが一致しているか確認、ノーツが処理される予定だった位置と処理された位置の差異(絶対値)を算出、関数に送る
+            if (Input.GetKeyDown(KeyCode.F))
+                LeftUp();
+            if (Input.GetKeyDown(KeyCode.V))
+                LeftDown();
+            if (Input.GetKeyDown(KeyCode.N))
+                RightDown();
+            if (Input.GetKeyDown(KeyCode.J))
+                RightUp();
 
-            // 楽曲終了チェック
-            if (musicTime > endTime) {
+            if (Time.time > endTime + GameManager.instance.startTime) {
                 finishFlag = true;
                 finish.SetActive(true);
-                Invoke(nameof(ResultScene), 3.0f);
+                Invoke("ResultScene", 3.0f);
                 return;
             }
 
-            // Miss判定
-            if (notesManager.NotesTime.Count > 0) {
-                if (musicTime > notesManager.NotesTime[0] + 0.2f) {
+            if (notesManager.NotesTime.Count != 0) {
+                if (Time.time > notesManager.NotesTime[0] + 0.2f + GameManager.instance.startTime) {  //判定可能時間内に入力を検知しなかった場合Miss判定
                     Judge_Message(3);
                     Debug.Log("Miss");
                     GameManager.instance.miss++;
@@ -64,7 +56,6 @@ public class Judge : MonoBehaviour {
             }
         }
 
-        // スコア演出
         if (GameManager.instance.showScore < GameManager.instance.score) {
             GameManager.instance.showScore += 149;
             if (GameManager.instance.showScore > GameManager.instance.score)
@@ -73,44 +64,52 @@ public class Judge : MonoBehaviour {
         scoreText.text = GameManager.instance.showScore.ToString();
     }
 
-    private int GetTouchedLane(Vector2 screenPos) {
-        Ray ray = Camera.main.ScreenPointToRay(screenPos);
-        if (Physics.Raycast(ray, out RaycastHit hit)) {
-            var lane = hit.collider.GetComponent<LaneInfo>();
-            if (lane != null)
-                return lane.laneIndex;
-        }
-        return -1;
+    public void LeftUp() {
+        if (notesManager.LaneNum[0] == 0)
+            Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GameManager.instance.startTime)), 0);
+        else if (notesManager.LaneNum[1] == 0)
+            Judgement(GetABS(Time.time - (notesManager.NotesTime[1] + GameManager.instance.startTime)), 1);
     }
 
-    private void TryJudgeLane(int lane, float musicTime) {
-        for (int i = 0; i < notesManager.LaneNum.Count; i++) {
-            if (notesManager.LaneNum[i] == lane) {
-                float timeLag = Mathf.Abs(musicTime - notesManager.NotesTime[i]);
-                Judgement(timeLag, i);
-                break;
-            }
-        }
+    public void LeftDown() {
+        if (notesManager.LaneNum[0] == 1)
+            Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GameManager.instance.startTime)), 0);
+        else if (notesManager.LaneNum[1] == 1)
+            Judgement(GetABS(Time.time - (notesManager.NotesTime[1] + GameManager.instance.startTime)), 1);
     }
 
-    private void Judgement(float timeLag, int numOffset) {
-        seSource.PlayOneShot(hitSound, GameManager.instance.settingData.SEVolume / 100f);
+    public void RightDown() {
+        if (notesManager.LaneNum[0] == 2)
+            Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GameManager.instance.startTime)), 0);
+        else if (notesManager.LaneNum[1] == 2)
+            Judgement(GetABS(Time.time - (notesManager.NotesTime[1] + GameManager.instance.startTime)), 1);
+    }
 
-        if (timeLag <= 0.10f) {
+    public void RightUp() {
+        if (notesManager.LaneNum[0] == 3)
+            Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GameManager.instance.startTime)), 0);
+        else if (notesManager.LaneNum[1] == 3)
+            Judgement(GetABS(Time.time - (notesManager.NotesTime[1] + GameManager.instance.startTime)), 1);
+    }
+
+    void Judgement(float timeLag, int numOffset) {
+        audio.PlayOneShot(hitSound, GameManager.instance.settingData.SEVolume / 100);
+
+        if (timeLag <= 0.10) {          //誤差が100ms以下
             Debug.Log("Perfect");
             Judge_Message(0);
             GameManager.instance.ratioScore += 5;
             GameManager.instance.perfect++;
             GameManager.instance.combo++;
             deleteData(numOffset);
-        } else if (timeLag <= 0.15f) {
+        } else if (timeLag <= 0.15) {   //誤差が150ms以下
             Debug.Log("Great");
             Judge_Message(1);
             GameManager.instance.ratioScore += 3;
             GameManager.instance.great++;
             GameManager.instance.combo++;
             deleteData(numOffset);
-        } else if (timeLag <= 0.20f) {
+        } else if (timeLag <= 0.20) {   //誤差が200ms以下
             Debug.Log("Bad");
             Judge_Message(2);
             GameManager.instance.ratioScore += 1;
@@ -119,30 +118,45 @@ public class Judge : MonoBehaviour {
             deleteData(numOffset);
         }
 
-        if (GameManager.instance.combo > GameManager.instance.maxCombo)
+        if (GameManager.instance.combo > GameManager.instance.maxCombo) {
             GameManager.instance.maxCombo = GameManager.instance.combo;
+        }
     }
 
+    /// <summary>
+    /// 引数の絶対値を返す
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns></returns>
+    float GetABS(float num) {
+        if (num >= 0)
+            return num;
+        else
+            return -num;
+    }
+
+    /// <summary>
+    /// 判定が行われたノーツを削除する
+    /// </summary>
     private void deleteData(int numOffset) {
         notesManager.NotesTime.RemoveAt(numOffset);
         notesManager.LaneNum.RemoveAt(numOffset);
         notesManager.NoteType.RemoveAt(numOffset);
-        GameManager.instance.score = (int)Mathf.Round(
-            1000000 * Mathf.Floor(GameManager.instance.ratioScore / GameManager.instance.maxScore * 1000000) / 1000000
-        );
+        GameManager.instance.score = (int)Mathf.Round(1000000 * Mathf.Floor(GameManager.instance.ratioScore / GameManager.instance.maxScore * 1000000) / 1000000);
         comboText.text = GameManager.instance.combo.ToString();
+        //scoreText.text = GameManager.instance.showScore.ToString();
     }
 
-    private void Judge_Message(int judge) {
-        Instantiate(MassageObj[judge],
-            new Vector3(notesManager.LaneNum[0] - 1.5f, 0.77f, 0.15f),
-            Quaternion.identity);
-        Instantiate(EffectPrefabs[judge],
-            EffectPlayTransform[notesManager.LaneNum[0]].transform.position,
-            Quaternion.identity);
+    /// <summary>
+    /// 判定を表示
+    /// </summary>
+    /// <param name="judge"></param>
+    void Judge_Message(int judge) {
+        Instantiate(MassageObj[judge], new Vector3(notesManager.LaneNum[0] - 1.5f, 0.77f, 0.15f), Quaternion.identity);
+        Instantiate(EffectPrefabs[judge], EffectPlayTransform[notesManager.LaneNum[0]].transform.position, Quaternion.identity);
     }
 
-    private void ResultScene() {
+    void ResultScene() {
         SceneManager.LoadScene("Result");
     }
 }

@@ -24,7 +24,7 @@ public class SongSelect : MonoBehaviour {
     private const int _SONG_NAME_INDEX = 0;
     private const int _SONG_LEVEL_INDEX = 1;
 
-    void Start() {
+    void Awake() {
         BackgroundVideoManager.Instance.PlayBackgroundVideo(1);
 
         songCount = dataBase.songData.Length;
