@@ -18,6 +18,7 @@ public class MusicManager : MonoBehaviour{
         songName = dataBase.songData[GameManager.instance.songID].songName;   //読み込むファイル名
         audio = GetComponent<AudioSource>();    //オーディオファイルを入れる
         Music = (AudioClip)Resources.Load("Musics/" + songName);
+        audio.clip = Music;
         played = false;
     }
 
@@ -29,7 +30,8 @@ public class MusicManager : MonoBehaviour{
         if (GameManager.instance.start) {
             time += Time.deltaTime;
             if((time >= GameManager.instance.settingData.songOffset / 1000) && !played) {
-                audio.PlayOneShot(Music, GameManager.instance.settingData.BGMVolume / 100);
+                //audio.PlayOneShot(Music, GameManager.instance.settingData.BGMVolume / 100);
+                audio.Play();
                 played = true;
             }            
         }
