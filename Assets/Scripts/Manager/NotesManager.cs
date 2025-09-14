@@ -67,7 +67,7 @@ public class NotesManager : MonoBehaviour {
             // 拍位置
             float noteBeatPosition = (float)inputJson.notes[i].num / inputJson.notes[i].LPB;
             // ノーツが判定線に来るべき時刻（AudioSource.time基準）
-            float time = beatSec * noteBeatPosition + inputJson.offset * 0.02f;
+            float time = beatSec * noteBeatPosition + inputJson.offset * 0.018f;
 
             NotesTime.Add(time);
             LaneNum.Add(inputJson.notes[i].block);

@@ -7,6 +7,9 @@ using static Const;
 using System.IO;
 
 public class SongSelect : MonoBehaviour {
+    public Transform parentObject;      // ボタンたちの親オブジェクト
+    public Color normalColor = Color.white;
+    public Color selectedColor = Color.green;
 
     [SerializeField] SongDataBase dataBase;
     [SerializeField] int songCount;
@@ -42,6 +45,10 @@ public class SongSelect : MonoBehaviour {
         Music = (AudioClip)Resources.Load("Musics/" + songName);
         audio.PlayOneShot(Music);
         songImage.sprite = dataBase.songData[select].songImage;
+
+        // 親オブジェクトの子 Button をすべて取得
+        Button[] buttons = parentObject.GetComponentsInChildren<Button>();
+        buttons[GameManager.instance.songID].GetComponent<Image>().color = selectedColor;
     }
 
     // Update is called once per frame
