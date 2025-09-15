@@ -11,6 +11,8 @@ public class MusicManager : MonoBehaviour{
     public string songName;
     bool played;
     float time = 0;
+    float autoTime = 0.0f;
+    float autoStartTime = 1.0f;
 
     void Start(){
         instance = this;
@@ -23,10 +25,17 @@ public class MusicManager : MonoBehaviour{
     }
 
     void Update() {
-        if (Input.anyKeyDown && !played) {
+        //if (Input.anyKeyDown && !played) {
+        //    GameManager.instance.start = true;
+        //    GameManager.instance.startTime = Time.time;
+        //}
+        if(autoTime < autoStartTime){
+            autoTime += Time.deltaTime;
+        } else if(GameManager.instance.start == false) {
             GameManager.instance.start = true;
             GameManager.instance.startTime = Time.time;
         }
+
         if (GameManager.instance.start) {
             time += Time.deltaTime;
             if((time >= GameManager.instance.settingData.songOffset * 0.001f) && !played) {

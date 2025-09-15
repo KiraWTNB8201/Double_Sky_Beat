@@ -19,6 +19,7 @@ public class Result : MonoBehaviour {
 
     private void Start() {
         AudioManager.instance.BGMPlay(2);
+        AudioManager.instance.SEPlay(2);
 
         SongName.text = MusicManager.instance.songName;
         //scoreText.text = GameManager.instance.score.ToString();
@@ -36,6 +37,7 @@ public class Result : MonoBehaviour {
             showScore += 3999;
             if(showScore > GameManager.instance.score) {
                 showScore = GameManager.instance.score;
+                AudioManager.instance.SEStop();
             }
         }
 
