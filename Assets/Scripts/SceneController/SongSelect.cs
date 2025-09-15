@@ -47,8 +47,8 @@ public class SongSelect : MonoBehaviour {
         songImage.sprite = dataBase.songData[select].songImage;
 
         // 親オブジェクトの子 Button をすべて取得
-        Button[] buttons = parentObject.GetComponentsInChildren<Button>();
-        buttons[GameManager.instance.songID].GetComponent<Image>().color = selectedColor;
+        //Button[] buttons = parentObject.GetComponentsInChildren<Button>();
+        //buttons[GameManager.instance.songID].GetComponent<Image>().color = selectedColor;
     }
 
     // Update is called once per frame

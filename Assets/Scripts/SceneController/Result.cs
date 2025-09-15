@@ -15,11 +15,13 @@ public class Result : MonoBehaviour {
     [SerializeField] TextMeshProUGUI badText;
     [SerializeField] TextMeshProUGUI missText;
 
+    int showScore = 0;
+
     private void Start() {
         AudioManager.instance.BGMPlay(2);
 
         SongName.text = MusicManager.instance.songName;
-        scoreText.text = GameManager.instance.score.ToString();
+        //scoreText.text = GameManager.instance.score.ToString();
         comboText.text = GameManager.instance.maxCombo.ToString();
         perfectText.text = GameManager.instance.perfect.ToString();
         greatText.text = GameManager.instance.great.ToString();
@@ -27,6 +29,17 @@ public class Result : MonoBehaviour {
         missText.text = GameManager.instance.miss.ToString();
 
         SongJacket.sprite = dataBase.songData[GameManager.instance.songID].songImage;
+    }
+
+    private void Update() {
+        if(showScore < GameManager.instance.score) {
+            showScore += 3999;
+            if(showScore > GameManager.instance.score) {
+                showScore = GameManager.instance.score;
+            }
+        }
+
+        scoreText.text = showScore.ToString();
     }
 
     public void Retry() {

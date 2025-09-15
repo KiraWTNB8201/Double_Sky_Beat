@@ -38,6 +38,13 @@ public class Judge : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.J))
                 RightUp();
 
+            if (GameManager.instance.showScore < GameManager.instance.score) {
+                GameManager.instance.showScore += 579;
+                if (GameManager.instance.showScore > GameManager.instance.score)
+                    GameManager.instance.showScore = GameManager.instance.score;
+            }
+            scoreText.text = GameManager.instance.showScore.ToString();
+
             if (Time.time > endTime + GameManager.instance.startTime) {
                 finishFlag = true;
                 finish.SetActive(true);
@@ -55,13 +62,6 @@ public class Judge : MonoBehaviour {
                 }
             }
         }
-
-        if (GameManager.instance.showScore < GameManager.instance.score) {
-            GameManager.instance.showScore += 149;
-            if (GameManager.instance.showScore > GameManager.instance.score)
-                GameManager.instance.showScore = GameManager.instance.score;
-        }
-        scoreText.text = GameManager.instance.showScore.ToString();
     }
 
     public void LeftUp() {

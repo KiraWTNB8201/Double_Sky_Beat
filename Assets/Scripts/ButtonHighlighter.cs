@@ -9,9 +9,11 @@ public class ButtonHighlighter : MonoBehaviour {
     private Button lastPressedButton;
     private Image lastPressedImage;
 
+    Button[] buttons;
+
     void Start() {
         // 親オブジェクトの子 Button をすべて取得
-        Button[] buttons = parentObject.GetComponentsInChildren<Button>();
+        buttons = parentObject.GetComponentsInChildren<Button>();
 
         foreach (var btn in buttons) {
             // Button にアタッチされている Image コンポーネント
@@ -23,6 +25,13 @@ public class ButtonHighlighter : MonoBehaviour {
             // ボタン押下時の処理を登録
             btn.onClick.AddListener(() => OnButtonPressed(btn));
         }
+        buttons[GameManager.instance.songID].GetComponent<Image>().color = selectedColor;
+        lastPressedButton = buttons[GameManager.instance.songID];
+        lastPressedImage = lastPressedButton.GetComponent<Image>();
+    }
+
+    private void Update() {
+        
     }
 
     void OnButtonPressed(Button pressed) {
