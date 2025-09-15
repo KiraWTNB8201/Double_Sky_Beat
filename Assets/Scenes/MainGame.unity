@@ -1410,6 +1410,7 @@ MonoBehaviour:
   RightUpLine: {fileID: 562177623}
   RightDownLine: {fileID: 761009612}
   dataBase: {fileID: 11400000, guid: 8e87c85635288864d92d491b6835a92a, type: 2}
+  measureLineObj: {fileID: 8682217554110386018, guid: b2d6efd4d0b70a346b52625441e5933a, type: 3}
 --- !u!4 &715849279
 Transform:
   m_ObjectHideFlags: 0

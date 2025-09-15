@@ -29,7 +29,7 @@ public class MusicManager : MonoBehaviour{
         }
         if (GameManager.instance.start) {
             time += Time.deltaTime;
-            if((time >= GameManager.instance.settingData.songOffset / 1000) && !played) {
+            if((time >= GameManager.instance.settingData.songOffset * 0.001f) && !played) {
                 //audio.PlayOneShot(Music, GameManager.instance.settingData.BGMVolume / 100);
                 audio.Play();
                 played = true;

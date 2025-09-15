@@ -37,6 +37,8 @@ public class NotesManager : MonoBehaviour {
 
     [SerializeField] private SongDataBase dataBase;
 
+    [SerializeField] private GameObject measureLineObj; // 小節線Prefab
+
     void OnEnable() {
         NotesSpeed = GameManager.instance.settingData.noteSpeed;
         noteNum = 0;
@@ -61,13 +63,14 @@ public class NotesManager : MonoBehaviour {
         noteNum = inputJson.notes.Length;
         GameManager.instance.maxScore = noteNum * 5;
 
+        float beatSec = 60f / inputJson.BPM;
+        float measureSec = beatSec * 4f; // 4/4固定なので1小節 = 4拍
+
         for (int i = 0; i < noteNum; i++) {
-            // BPM → 1拍の秒数
-            float beatSec = 60f / inputJson.BPM;
             // 拍位置
             float noteBeatPosition = (float)inputJson.notes[i].num / inputJson.notes[i].LPB;
             // ノーツが判定線に来るべき時刻（AudioSource.time基準）
-            float time = beatSec * noteBeatPosition + inputJson.offset * 0.018f;
+            float time = beatSec * noteBeatPosition + inputJson.offset * 0.001f;
 
             NotesTime.Add(time);
             LaneNum.Add(inputJson.notes[i].block);
@@ -108,6 +111,21 @@ public class NotesManager : MonoBehaviour {
                     break;
             }
             NotesObj.Add(Instantiate(noteObj, spawnPos, spawnRot, parent));
+        }
+
+        // --- 小節線を自動生成 ---
+        AudioClip song = (AudioClip)Resources.Load("Musics/" + songName);
+        float songLength = song.length;
+        int measureCount = Mathf.CeilToInt(songLength / measureSec);
+
+        for (int i = 0; i < measureCount; i++) {
+            float time = i * measureSec + inputJson.offset * 0.001f;
+            float z = time * NotesSpeed;
+
+            Instantiate(measureLineObj, LeftUpLine.transform.position + new Vector3(0.5f, 0.5f, z), LeftUpLine.transform.rotation, LeftUpLine.transform);
+            Instantiate(measureLineObj, LeftDownLine.transform.position + new Vector3(0.5f, -0.5f, z), LeftDownLine.transform.rotation, LeftDownLine.transform);
+            Instantiate(measureLineObj, RightUpLine.transform.position + new Vector3(-0.5f, -0.5f, z), RightUpLine.transform.rotation, RightUpLine.transform);
+            Instantiate(measureLineObj, RightDownLine.transform.position + new Vector3(-0.5f, 0.5f, z), RightDownLine.transform.rotation, RightDownLine.transform);
         }
     }
 }
