@@ -44,9 +44,12 @@ public class NotesManager : MonoBehaviour {
 
     [SerializeField] int poolSize = 64;
     [SerializeField] float appearLeadTime = 2.5f;
+    [SerializeField] private float missTime = 0.2f;
+    public float MissTime => missTime;
 
     int nextNoteIndex = 0;
-    AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource;
+    public float AudioTime => audioSource.time;
 
     void OnEnable() {
         NotesSpeed = GameManager.instance.settingData.noteSpeed;
@@ -66,8 +69,6 @@ public class NotesManager : MonoBehaviour {
     }
 
     private void Start() {
-        audioSource = GetComponent<AudioSource>();
-
         for (int i = 0; i < poolSize; i++) {
             var obj = Instantiate(noteObj);
             obj.SetActive(false);
@@ -84,53 +85,47 @@ public class NotesManager : MonoBehaviour {
         }
     }
 
-    void SpawnNote(int index) {
-        if (notePool.Count == 0) return;
+    void SpawnNote(int index)
+{
+    if (notePool.Count == 0) return;
 
-        var view = notePool.Dequeue();
+    var view = notePool.Dequeue();
 
-        int lane = LaneNum[index];
-        float time = NotesTime[index];
+    int lane = LaneNum[index];
 
-        float travelTime = time - audioSource.time;
-        float z = travelTime * NotesSpeed;
+    Vector3 linePos;
+    Vector3 offset;
+    Quaternion rot;
 
-        if (index + 1 < noteNum && Mathf.Approximately(NotesTime[index], NotesTime[index + 1])) {
-            view.GetComponent<MeshRenderer>().material.color = Color.yellow;
-        }
-
-        Vector3 spawnPos;
-        Quaternion spawnRot;
-        Transform parent;
-        switch (lane)
-        {
-            case 0:
-                parent = LeftUpLine.transform;
-                spawnPos = parent.position + new Vector3(0.5f, 0.5f, z);
-                spawnRot = parent.rotation;
-                break;
-            case 1:
-                parent = LeftDownLine.transform;
-                spawnPos = parent.position + new Vector3(0.5f, -0.5f, z);
-                spawnRot = parent.rotation;
-                break;
-            case 2:
-                parent = RightUpLine.transform;
-                spawnPos = parent.position + new Vector3(-0.5f, -0.5f, z);
-                spawnRot = parent.rotation;
-                break;
-            case 3:
-                parent = RightDownLine.transform;
-                spawnPos = parent.position + new Vector3(-0.5f, 0.5f, z);
-                spawnRot = parent.rotation;
-                break;
-            default:
-                return;
-        }
-
-        view.Setup(index, this, spawnPos, spawnRot, parent);
-        activeNotes.Add(index, view);
+    switch (lane)
+    {
+        case 0:
+            linePos = LeftUpLine.transform.position;
+            offset = new Vector3(0.5f, 0.5f, 0f);
+            rot = LeftUpLine.transform.rotation;
+            break;
+        case 1:
+            linePos = LeftDownLine.transform.position;
+            offset = new Vector3(0.5f, -0.5f, 0f);
+            rot = LeftDownLine.transform.rotation;
+            break;
+        case 2:
+            linePos = RightUpLine.transform.position;
+            offset = new Vector3(-0.5f, -0.5f, 0f);
+            rot = RightUpLine.transform.rotation;
+            break;
+        case 3:
+            linePos = RightDownLine.transform.position;
+            offset = new Vector3(-0.5f, 0.5f, 0f);
+            rot = RightDownLine.transform.rotation;
+            break;
+        default:
+            return;
     }
+
+    view.Setup( index, this, linePos, offset, NotesSpeed, rot );
+    activeNotes.Add(index, view);
+}
 
     public void DespawnNote(int index) {
         if (!activeNotes.TryGetValue(index, out var view)) return;
