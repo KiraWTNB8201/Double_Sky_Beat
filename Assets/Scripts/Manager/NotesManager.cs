@@ -39,6 +39,15 @@ public class NotesManager : MonoBehaviour {
 
     [SerializeField] private GameObject measureLineObj; // è¨êﬂê¸Prefab
 
+    Queue<NoteView> notePool = new Queue<NoteView>();
+    Dictionary<int, NoteView> activeNotes = new Dictionary<int, NoteView>();
+
+    [SerializeField] int poolSize = 64;
+    [SerializeField] float appearLeadTime = 2.5f;
+
+    int nextNoteIndex = 0;
+    AudioSource audioSource;
+
     void OnEnable() {
         NotesSpeed = GameManager.instance.settingData.noteSpeed;
         noteNum = 0;
@@ -46,14 +55,92 @@ public class NotesManager : MonoBehaviour {
         Load(songName);
 
         // ìØéûâüÇµêFïœçX
-        for (int i = 0, max = NotesTime.Count - 1; i < max; i++) {
-            if (Mathf.Approximately(NotesTime[i], NotesTime[i + 1])) {
-                var obj = NotesObj[i].GetComponent<MeshRenderer>();
-                var obj2 = NotesObj[i + 1].GetComponent<MeshRenderer>();
-                obj.material.color = Color.yellow;
-                obj2.material.color = Color.yellow;
-            }
+        //for (int i = 0, max = NotesTime.Count - 1; i < max; i++) {
+        //    if (Mathf.Approximately(NotesTime[i], NotesTime[i + 1])) {
+        //        var obj = NotesObj[i].GetComponent<MeshRenderer>();
+        //        var obj2 = NotesObj[i + 1].GetComponent<MeshRenderer>();
+        //        obj.material.color = Color.yellow;
+        //        obj2.material.color = Color.yellow;
+        //    }
+        //}
+    }
+
+    private void Start() {
+        audioSource = GetComponent<AudioSource>();
+
+        for (int i = 0; i < poolSize; i++) {
+            var obj = Instantiate(noteObj);
+            obj.SetActive(false);
+            notePool.Enqueue(obj.GetComponent<NoteView>());
         }
+    }
+
+    private void Update() {
+        float currentTime = audioSource.time;
+
+        while (nextNoteIndex < noteNum && NotesTime[nextNoteIndex] <= currentTime + appearLeadTime) {
+            SpawnNote(nextNoteIndex);
+            nextNoteIndex++;
+        }
+    }
+
+    void SpawnNote(int index) {
+        if (notePool.Count == 0) return;
+
+        var view = notePool.Dequeue();
+
+        int lane = LaneNum[index];
+        float time = NotesTime[index];
+
+        float travelTime = time - audioSource.time;
+        float z = travelTime * NotesSpeed;
+
+        if (index + 1 < noteNum && Mathf.Approximately(NotesTime[index], NotesTime[index + 1])) {
+            view.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        }
+
+        Vector3 spawnPos;
+        Quaternion spawnRot;
+        Transform parent;
+        switch (lane)
+        {
+            case 0:
+                parent = LeftUpLine.transform;
+                spawnPos = parent.position + new Vector3(0.5f, 0.5f, z);
+                spawnRot = parent.rotation;
+                break;
+            case 1:
+                parent = LeftDownLine.transform;
+                spawnPos = parent.position + new Vector3(0.5f, -0.5f, z);
+                spawnRot = parent.rotation;
+                break;
+            case 2:
+                parent = RightUpLine.transform;
+                spawnPos = parent.position + new Vector3(-0.5f, -0.5f, z);
+                spawnRot = parent.rotation;
+                break;
+            case 3:
+                parent = RightDownLine.transform;
+                spawnPos = parent.position + new Vector3(-0.5f, 0.5f, z);
+                spawnRot = parent.rotation;
+                break;
+            default:
+                return;
+        }
+
+        view.Setup(index, this, spawnPos, spawnRot, parent);
+        activeNotes.Add(index, view);
+    }
+
+    public void DespawnNote(int index) {
+        if (!activeNotes.TryGetValue(index, out var view)) return;
+
+        activeNotes.Remove(index);
+        view.Release();
+    }
+
+    public void ReleaseNote(NoteView view) {
+        notePool.Enqueue(view);
     }
 
     private void Load(string songName) {
@@ -80,37 +167,37 @@ public class NotesManager : MonoBehaviour {
             float travelTime = time; // îªíËê¸Ç‹Ç≈ÇÃécÇËéûä‘Çà⁄ìÆãóó£Ç…ïœä∑
             float z = travelTime * NotesSpeed;
 
-            Vector3 spawnPos;
-            Quaternion spawnRot;
-            Transform parent;
-            switch (inputJson.notes[i].block) {
-                case 0:
-                    spawnPos = LeftUpLine.transform.position + new Vector3(0.5f, 0.5f, z);
-                    spawnRot = LeftUpLine.transform.rotation;
-                    parent = LeftUpLine.transform;
-                    break;
-                case 1:
-                    spawnPos = LeftDownLine.transform.position + new Vector3(0.5f, -0.5f, z);
-                    spawnRot = LeftDownLine.transform.rotation;
-                    parent = LeftDownLine.transform;
-                    break;
-                case 2:
-                    spawnPos = RightUpLine.transform.position + new Vector3(-0.5f, -0.5f, z);
-                    spawnRot = RightUpLine.transform.rotation;
-                    parent = RightUpLine.transform;
-                    break;
-                case 3:
-                    spawnPos = RightDownLine.transform.position + new Vector3(-0.5f, 0.5f, z);
-                    spawnRot = RightDownLine.transform.rotation;
-                    parent = RightDownLine.transform;
-                    break;
-                default:
-                    spawnPos = Vector3.zero;
-                    spawnRot = Quaternion.identity;
-                    parent = null;
-                    break;
-            }
-            NotesObj.Add(Instantiate(noteObj, spawnPos, spawnRot, parent));
+            //Vector3 spawnPos;
+            //Quaternion spawnRot;
+            //Transform parent;
+            //switch (inputJson.notes[i].block) {
+            //    case 0:
+            //        spawnPos = LeftUpLine.transform.position + new Vector3(0.5f, 0.5f, z);
+            //        spawnRot = LeftUpLine.transform.rotation;
+            //        parent = LeftUpLine.transform;
+            //        break;
+            //    case 1:
+            //        spawnPos = LeftDownLine.transform.position + new Vector3(0.5f, -0.5f, z);
+            //        spawnRot = LeftDownLine.transform.rotation;
+            //        parent = LeftDownLine.transform;
+            //        break;
+            //    case 2:
+            //        spawnPos = RightUpLine.transform.position + new Vector3(-0.5f, -0.5f, z);
+            //        spawnRot = RightUpLine.transform.rotation;
+            //        parent = RightUpLine.transform;
+            //        break;
+            //    case 3:
+            //        spawnPos = RightDownLine.transform.position + new Vector3(-0.5f, 0.5f, z);
+            //        spawnRot = RightDownLine.transform.rotation;
+            //        parent = RightDownLine.transform;
+            //        break;
+            //    default:
+            //        spawnPos = Vector3.zero;
+            //        spawnRot = Quaternion.identity;
+            //        parent = null;
+            //        break;
+            //}
+            //NotesObj.Add(Instantiate(noteObj, spawnPos, spawnRot, parent));
         }
 
         // --- è¨êﬂê¸Çé©ìÆê∂ê¨ ---
