@@ -85,47 +85,47 @@ public class NotesManager : MonoBehaviour {
         }
     }
 
-    void SpawnNote(int index)
-{
-    if (notePool.Count == 0) return;
-
-    var view = notePool.Dequeue();
-
-    int lane = LaneNum[index];
-
-    Vector3 linePos;
-    Vector3 offset;
-    Quaternion rot;
-
-    switch (lane)
-    {
-        case 0:
-            linePos = LeftUpLine.transform.position;
-            offset = new Vector3(0.5f, 0.5f, 0f);
-            rot = LeftUpLine.transform.rotation;
-            break;
-        case 1:
-            linePos = LeftDownLine.transform.position;
-            offset = new Vector3(0.5f, -0.5f, 0f);
-            rot = LeftDownLine.transform.rotation;
-            break;
-        case 2:
-            linePos = RightUpLine.transform.position;
-            offset = new Vector3(-0.5f, -0.5f, 0f);
-            rot = RightUpLine.transform.rotation;
-            break;
-        case 3:
-            linePos = RightDownLine.transform.position;
-            offset = new Vector3(-0.5f, 0.5f, 0f);
-            rot = RightDownLine.transform.rotation;
-            break;
-        default:
+    void SpawnNote(int index) {
+        if (notePool.Count == 0) {
+            Debug.LogError("プールに空きがありません！！");
             return;
-    }
+        }
 
-    view.Setup( index, this, linePos, offset, NotesSpeed, rot );
-    activeNotes.Add(index, view);
-}
+        var view = notePool.Dequeue();
+
+        int lane = LaneNum[index];
+
+        Vector3 linePos;
+        Vector3 offset;
+        Quaternion rot;
+
+        switch (lane) {
+            case 0:
+                linePos = LeftUpLine.transform.position;
+                offset = new Vector3(0.5f, 0.5f, 0f);
+                rot = LeftUpLine.transform.rotation;
+                break;
+            case 1:
+                linePos = LeftDownLine.transform.position;
+                offset = new Vector3(0.5f, -0.5f, 0f);
+                rot = LeftDownLine.transform.rotation;
+                break;
+            case 2:
+                linePos = RightUpLine.transform.position;
+                offset = new Vector3(-0.5f, -0.5f, 0f);
+                rot = RightUpLine.transform.rotation;
+                break;
+            case 3:
+                linePos = RightDownLine.transform.position;
+                offset = new Vector3(-0.5f, 0.5f, 0f);
+                rot = RightDownLine.transform.rotation;
+                break;
+            default: return;
+        }
+
+        view.Setup( index, this, linePos, offset, NotesSpeed, rot);
+        activeNotes.Add(index, view);
+    }
 
     public void DespawnNote(int index) {
         if (!activeNotes.TryGetValue(index, out var view)) return;
